@@ -7,8 +7,8 @@ android {
         applicationId "tk.aureljared.pisaygwa"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 4
-        versionName "Release 6"
+        versionCode 7
+        versionName "release 7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
