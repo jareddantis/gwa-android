@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tk.aureljared.pisaygwa" >
 
-    <uses-sdk android:minSdkVersion="19"
-        android:targetSdkVersion="25" />
+    <uses-sdk android:minSdkVersion="21"
+        android:targetSdkVersion="26" />
 
     <application
         android:allowBackup="true"
