@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,22 +24,25 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<HashMap<String, String>> level;
 
-    private TextView result;
+    private static SharedPreferences appPrefs;
 
-    private static SubjectAdapter sa;
+    private static TextView result;
+
+    private SubjectAdapter sa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = findViewById(R.id.toolbar);
+        result = findViewById(R.id.result);
 
         // Action bar
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Get the set level or use the default
-        SharedPreferences appPrefs = this.getPreferences(Context.MODE_PRIVATE);
+        appPrefs = this.getPreferences(Context.MODE_PRIVATE);
         gradeLevel = appPrefs.getInt("gradeLevel", 1);
 
         // Parse subjects from JSON
@@ -68,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 // Regenerate subject list
                 retrieveSubjects();
                 sa.notifyDataSetChanged();
+                sa.emptyGrades();
 
                 // Save
-                SharedPreferences appPrefs = getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = appPrefs.edit();
                 editor.putInt("gradeLevel", position);
                 editor.apply();
@@ -82,10 +86,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Welcome!
-        result = findViewById(R.id.result);
-        result.setText("1.000");
-        setColor();
+        // Restore saved grades
+        sa.restoreGrades(appPrefs.getString("grades", ""));
+        //subjectList.getRecycledViewPool().clear();
+        //updateGwa(sa.getGwa());
+        updateGwa("1.000");
     }
 
     protected void retrieveSubjects() {
@@ -101,16 +106,19 @@ public class MainActivity extends AppCompatActivity {
         result.setTextColor(color);
     }
 
-    protected static long getItemId(int pos) {
-        return sa.getItemId(pos);
-    }
-
-    protected static int getItemCount() {
-        return sa.getItemCount();
-    }
-
     protected static int getGradeLevel() {
         return gradeLevel;
+    }
+
+    protected static void updateGwa(String r) {
+        result.setText(r);
+    }
+
+    protected static void saveGrades(double[] grades) {
+        String gradeStr = Arrays.toString(grades);
+        SharedPreferences.Editor e = appPrefs.edit();
+        e.putString("grades", gradeStr);
+        e.apply();
     }
 
     @Override

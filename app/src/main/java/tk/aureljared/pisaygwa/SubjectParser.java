@@ -43,8 +43,13 @@ public class SubjectParser {
         ArrayList<HashMap<String, String>> subjects = getSubjects(gradeLevel);
         Double units = 0.0;
         for (int i = 0; i < subjects.size(); i++)
-            Double.valueOf(subjects.get(i).get("units"));
+            units += Double.valueOf(subjects.get(i).get("units"));
         return units;
+    }
+
+    protected static int getNumOfSubjects(int gradeLevel) {
+        ArrayList<HashMap<String, String>> subjects = getSubjects(gradeLevel);
+        return subjects.size();
     }
 
     protected static int getColor(Context ctx, int gradeLevel) {

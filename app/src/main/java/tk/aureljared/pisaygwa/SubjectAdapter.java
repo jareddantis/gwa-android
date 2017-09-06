@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +19,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
     private final Activity ctx;
 
     private final ArrayList<HashMap<String, String>> subjects;
+
+    private static double[] grades;
+
+    private static double units;
 
     public SubjectAdapter(Activity ctx, ArrayList<HashMap<String, String>> subjects) {
         this.ctx = ctx;
@@ -52,8 +54,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        int size = (subjects == null) ? 0 : subjects.size();
-        return size;
+        return (subjects == null) ? 0 : subjects.size();
     }
 
     @Override
@@ -70,9 +71,11 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
         holder.mask.setCardBackgroundColor(color);
 
         // Set color
+        String savedGrade = formatGrade(grades[position]);
         holder.plus.setColorFilter(color);
         holder.minus.setColorFilter(color);
         holder.grade.setTextColor(color);
+        holder.grade.setText(savedGrade);
 
         // Populate data
         holder.name.setText(subjectName);
@@ -89,9 +92,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 Double currentGrade = Double.valueOf((String) grade.getText());
-                if (currentGrade == 1.0)
-                    return;
-                else {
+                if (currentGrade != 1.0) {
                     Double increment;
                     if (currentGrade == 5.0 || currentGrade == 4.0)
                         increment = 1.0;
@@ -100,7 +101,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
                     String newGrade = formatGrade(currentGrade - increment);
                     grade.setText(newGrade);
-                    calculateGwa();
+
+                    // Add grade to array
+                    grades[position] = Double.valueOf(newGrade);
+                    MainActivity.updateGwa(getGwa());
                 }
             }
         });
@@ -108,9 +112,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 Double currentGrade = Double.valueOf((String) grade.getText());
-                if (currentGrade == 5.0)
-                    return;
-                else {
+                if (currentGrade != 5.0) {
                     Double decrement;
                     if (currentGrade == 3.0 || currentGrade == 4.0)
                         decrement = 1.0;
@@ -119,7 +121,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
                     String newGrade = formatGrade(currentGrade + decrement);
                     grade.setText(newGrade);
-                    calculateGwa();
+
+                    // Add grade to array
+                    grades[position] = Double.valueOf(newGrade);
+                    MainActivity.updateGwa(getGwa());
                 }
             }
         });
@@ -178,43 +183,46 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
         return icon;
     }
 
-    // TODO: Correctly calculate GWA for offscreen grades
-    public void calculateGwa() {
-        int gradeLevel = MainActivity.getGradeLevel();
+    public static void restoreGrades(String saved) {
+        emptyGrades();
+        if (!saved.equals("null") && saved.length() >= 5) {
+            saved = saved.replaceAll("\\s+", "");
+            saved = saved.substring(1, saved.length() - 1);
+            String[] savedGrades = saved.split(",");
+            for (int i = 0; i < savedGrades.length; i++)
+                grades[i] = Double.valueOf(savedGrades[i]);
+        }
+    }
+
+    public static String getGwa() {
+        // Save grades first
+        MainActivity.saveGrades(grades);
 
         // Get sum
-        RecyclerView rv = ((Activity) ctx).findViewById(R.id.subjectsList);
-        Double total = 0.0, units = 0.0;
-        Log.d("PisayGWA", "------------------");
-        int count = MainActivity.getItemCount();
-        for (int i = 0; i < count; i++) {
-            ViewHolder holder = (ViewHolder) rv.findViewHolderForAdapterPosition(i);
-            try {
-                Double grade = Double.valueOf((String) holder.grade.getText());
-                Double subUnits = SubjectParser.getUnits(gradeLevel, i);
-                Double weighted = subUnits * grade;
-                Log.d("PisayGWA", "sub = ".concat(Integer.toString(i)).concat(", units = ").concat(Double.toString(subUnits)));
-                Log.d("PisayGWA", "grade = ".concat(Double.toString(grade)).concat(", weighted = ").concat(Double.toString(weighted)));
-                total += weighted;
-                units += subUnits;
-            } catch (NullPointerException ex) {
-                Log.w("PisayGWA", "Null pointer at i = ".concat(Integer.toString(i)));
-                Log.w("PisayGWA", "where item count = ".concat(Integer.toString(count)));
-                return;
-            }
+        int gradeLevel = MainActivity.getGradeLevel();
+        Double total = 0.0;
+        for (int i = 0; i < grades.length; i++) {
+            Double grade = grades[i];
+            Double subUnits = SubjectParser.getUnits(gradeLevel, i);
+            Double weighted = subUnits * grade;
+            total += weighted;
         }
 
         // Get average
-        Log.d("PisayGWA", "------------------");
         Double average = total / units;
-        Log.d("PisayGWA", "total = ".concat(Double.toString(total)));
-        Log.d("PisayGWA", "units = ".concat(Double.toString(units)));
-        Log.d("PisayGWA", "average = ".concat(Double.toString(average)));
-        TextView result = ((Activity) ctx).findViewById(R.id.result);
         DecimalFormat df = new DecimalFormat("#.#####");
-        df.setRoundingMode(RoundingMode.DOWN);
         df.setMinimumFractionDigits(3);
-        result.setText(df.format(average));
+        df.setMaximumFractionDigits(3);
+        return df.format(average);
+    }
+
+    protected static void emptyGrades() {
+        int gradeLevel = MainActivity.getGradeLevel();
+        int num = SubjectParser.getNumOfSubjects(gradeLevel);
+        grades = new double[num];
+        units = SubjectParser.getTotalUnits(gradeLevel);
+        for (int i = 0; i < num; i++)
+            grades[i] = 1.0;
     }
 
     private String formatGrade(Double grade) {
