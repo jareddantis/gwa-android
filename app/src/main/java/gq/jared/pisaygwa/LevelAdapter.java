@@ -1,4 +1,4 @@
-package tk.aureljared.pisaygwa;
+package gq.jared.pisaygwa;
 
 import android.content.Context;
 import android.view.View;
@@ -15,7 +15,7 @@ public class LevelAdapter<T> extends ArrayAdapter<T> {
 
     public static ArrayAdapter<CharSequence> createFromResource(Context context, int textArrayResId, int textViewResId) {
         CharSequence[] strings = context.getResources().getTextArray(textArrayResId);
-        return new LevelAdapter<CharSequence>(context, textViewResId, strings);
+        return new LevelAdapter<>(context, textViewResId, strings);
     }
 
     @Override
@@ -24,4 +24,5 @@ public class LevelAdapter<T> extends ArrayAdapter<T> {
         view.setPadding(0, view.getPaddingTop(), 0, view.getPaddingBottom());
         return view;
     }
+
 }

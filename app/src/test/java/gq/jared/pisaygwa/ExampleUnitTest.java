@@ -1,4 +1,4 @@
-package tk.aureljared.pisaygwa;
+package gq.jared.pisaygwa;
 
 import org.junit.Test;
 

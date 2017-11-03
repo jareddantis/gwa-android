@@ -6,16 +6,21 @@
         <item name="colorPrimary">@color/colorDefault</item>
         <item name="colorPrimaryDark">@color/colorDefaultDark</item>
         <item name="colorAccent">@color/colorGrade7</item>
-        <item name="android:statusBarColor" tools:targetApi="21">@color/colorStatusBar</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@color/colorDefaultDark</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/colorGrade7</item>
         <item name="android:spinnerItemStyle">@style/LevelChooser</item>
+    </style>
+
+    <style name="AppBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/colorDefaultLight</item>
+        <item name="android:textColorSecondary">@color/colorDefaultLight</item>
+        <item name="android:background">@color/colorGrade7</item>
     </style>
 
     <style name="LevelChooser">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/colorDefaultDark</item>
+        <item name="android:textColor">@color/colorDefaultLight</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>

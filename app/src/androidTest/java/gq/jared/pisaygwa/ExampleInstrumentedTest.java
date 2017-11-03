@@ -1,4 +1,4 @@
-package tk.aureljared.pisaygwa;
+package gq.jared.pisaygwa;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
