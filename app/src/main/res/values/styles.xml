@@ -1,26 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorDefault</item>
         <item name="colorPrimaryDark">@color/colorDefaultDark</item>
         <item name="colorAccent">@color/colorGrade7</item>
         <item name="android:statusBarColor" tools:targetApi="21">@color/colorDefaultDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">@color/colorGrade7</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/colorDefaultDark</item>
         <item name="android:spinnerItemStyle">@style/LevelChooser</item>
+        <item name="android:actionBarStyle">@style/MainBar</item>
     </style>
 
-    <style name="AppBar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:textColorPrimary">@color/colorDefaultLight</item>
-        <item name="android:textColorSecondary">@color/colorDefaultLight</item>
-        <item name="android:background">@color/colorGrade7</item>
+    <style name="MainBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="LevelChooser">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/colorDefaultLight</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -44,6 +42,14 @@
         <item name="android:textSize">32sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorGrade7</item>
+    </style>
+
+    <style name="AboutTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorDefaultDark</item>
+        <item name="colorPrimaryDark">@color/colorDefault</item>
+        <item name="colorAccent">@color/colorGrade7</item>
+        <!--<item name="android:actionBarStyle">@style/MainBar</item>-->
     </style>
 
 </resources>

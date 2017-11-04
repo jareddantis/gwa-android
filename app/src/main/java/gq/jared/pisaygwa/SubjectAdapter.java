@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
     private List<Subject> subjectList;
     private Context ctx;
+    private String gwa;
 
     public SubjectAdapter(Context ctx, List<Subject> subjectList) {
         this.ctx = ctx;
@@ -46,8 +48,8 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
                 public void onClick(View view) {
                     double newGrade = subjectList.get(getAdapterPosition()).increaseGrade();
                     grade.setText(Subject.formatGrade(newGrade));
-                    saveGrades();
                     computeGwa();
+                    saveGrades();
                 }
             });
             minus.setOnClickListener(new View.OnClickListener() {
@@ -55,8 +57,8 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
                 public void onClick(View view) {
                     double newGrade = subjectList.get(getAdapterPosition()).decreaseGrade();
                     grade.setText(Subject.formatGrade(newGrade));
-                    saveGrades();
                     computeGwa();
+                    saveGrades();
                 }
             });
         }
@@ -107,23 +109,33 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
             units += subjectList.get(i).units();
         }
 
-        DecimalFormat df = new DecimalFormat("#.#####");
-        df.setMinimumFractionDigits(3);
-        df.setMaximumFractionDigits(3);
+        DecimalFormat df = new DecimalFormat("#.000");
+        df.setRoundingMode(RoundingMode.DOWN);
         average = total / units;
-        result.setText(df.format(average));
+        gwa = df.format(average);
+        result.setText(gwa);
     }
 
     private void saveGrades() {
         String[] data = new String[subjectList.size()];
         for (int i = 0; i < subjectList.size(); i++)
-            data[i] = subjectList.get(i).toString();
+            data[i] = Double.toString(subjectList.get(i).getGrade());
 
         SharedPreferences sharedPrefs = ctx.getSharedPreferences("pisaygwa",
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString("grades", Arrays.toString(data));
+        editor.putString("grades", Arrays.toString(data).replace("[", "")
+                .replace("]", "").replaceAll("\\s", ""));
+        editor.putString("gwa", gwa);
         editor.apply();
+    }
+
+    public void clearGrades() {
+        for (int i = 0; i < subjectList.size(); i++)
+            subjectList.get(i).setGrade(1.0);
+        computeGwa();
+        saveGrades();
+        notifyDataSetChanged();
     }
 
 }

@@ -125,8 +125,4 @@ public class Subject {
         return grade;
     }
 
-    @Override
-    public String toString() {
-        return name + "=" + Double.toString(units);
-    }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<notices>
+    <notice>
+        <name>Android Open Source Project</name>
+        <url>http://developer.android.com/tools/support-library/index.html</url>
+        <copyright>Copyright (C) 2016 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Android Support Libraries</name>
+        <url>http://developer.android.com/tools/support-library/index.html</url>
+        <copyright>Copyright (C) 2016 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>AppUpdater</name>
+        <url>https://github.com/javiersantos/AppUpdater</url>
+        <copyright>Copyright (C) 2016 Javier Santos</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+</notices>

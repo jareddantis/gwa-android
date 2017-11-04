@@ -1,6 +1,7 @@
 package gq.jared.pisaygwa;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,10 +9,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private SubjectAdapter subjectAdapter;
     private TextView result;
     private int gradeLevel;
+    private boolean firstRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +51,11 @@ public class MainActivity extends AppCompatActivity {
         gradeLevel = sharedPrefs.getInt("gradeLevel", 1);
 
         // Setup view
-        subjectList = switchLevel(gradeLevel);
+        subjectList = new ArrayList<>();
         subjectAdapter = new SubjectAdapter(this, subjectList);
         RecyclerView sView = findViewById(R.id.subjectsList);
         sView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         sView.setItemAnimator(new DefaultItemAnimator());
-        sView.addItemDecoration(new DividerItemDecoration(sView.getContext(),
-                sView.getLayoutManager().getLayoutDirection()));
         sView.setAdapter(subjectAdapter);
 
         // Setup dropdown
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner spinner = findViewById(R.id.levelchooser);
         spinner.setAdapter(adapter);
-        spinner.setSelection(gradeLevel);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
@@ -71,60 +72,100 @@ public class MainActivity extends AppCompatActivity {
                 gradeLevel = position;
 
                 // Regenerate subject list
-                subjectAdapter.notifyItemRangeRemoved(0, subjectList.size() - 1);
-                subjectList.clear();
-                subjectList.addAll(switchLevel(gradeLevel));
-                subjectAdapter.notifyItemRangeInserted(0, subjectList.size() - 1);
+                subjectAdapter.notifyItemRangeRemoved(0, subjectAdapter.getItemCount());
+                switchLevel(gradeLevel);
+                restoreGrades();
+                subjectAdapter.notifyItemRangeInserted(0, subjectList.size());
                 scrollToTop();
 
                 // Save
                 SharedPreferences.Editor editor = sharedPrefs.edit();
                 editor.putInt("gradeLevel", gradeLevel);
                 editor.apply();
+                if (firstRun)
+                    firstRun = false;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // stub
+                // nothing
             }
         });
+        spinner.setSelection(gradeLevel);
     }
 
-    private List<Subject> switchLevel(int gradeLevel) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear:
+                subjectAdapter.clearGrades();
+                break;
+            case R.id.action_about:
+                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                MainActivity.this.startActivity(intent);
+                break;
+        }
+        return false;
+    }
+
+    private YearLevel.Level getYearLevelObj(int gradeLevel) {
         YearLevel.Level level;
-        int color, darker;
 
         switch (gradeLevel) {
             case 0:
                 level = new YearLevel.First();
+                break;
+            case 1:
+                level = new YearLevel.Second();
+                break;
+            case 2:
+                level = new YearLevel.Third();
+                break;
+            case 3:
+                level = new YearLevel.Fourth();
+                break;
+            default:
+                level = new YearLevel.Syp();
+        }
+
+        return level;
+    }
+
+    private void switchLevel(int gradeLevel) {
+        int color, darker;
+
+        switch (gradeLevel) {
+            case 0:
                 color = R.color.colorGrade7;
                 darker = R.color.darkGrade7;
                 break;
             case 1:
-                level = new YearLevel.Second();
                 color = R.color.colorGrade8;
                 darker = R.color.darkGrade8;
                 break;
             case 2:
-                level = new YearLevel.Third();
                 color = R.color.colorGrade9;
                 darker = R.color.darkGrade9;
                 break;
             case 3:
-                level = new YearLevel.Fourth();
                 color = R.color.colorGrade10;
                 darker = R.color.darkGrade10;
                 break;
             default:
-                level = new YearLevel.Syp();
                 color = R.color.colorGradeSyp;
                 darker = R.color.darkGradeSyp;
         }
 
         setColor(ContextCompat.getColor(this, color),
                 ContextCompat.getColor(this, darker));
-        List<Subject> subjects = level.subjects();
-        return restoreGrades(subjects);
+        subjectList.clear();
+        subjectList.addAll(getYearLevelObj(gradeLevel).subjects());
     }
 
     private void setColor(int color, int darker) {
@@ -138,24 +179,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private List<Subject> restoreGrades(List<Subject> list) {
-        if (sharedPrefs.contains("grades") && sharedPrefs.contains("gwa")) {
+    private void restoreGrades() {
+        if (firstRun) {
             // Restore grades
-            String[] saved = sharedPrefs.getString("grades", "").split(",");
-            if (saved.length == list.size()) {
-                for (int i = 0; i < list.size(); i++) {
-                    String[] entry = saved[i].split("=");
-                    if (list.get(i).name().equals(entry[0]))
-                        list.get(i).setGrade(Double.parseDouble(entry[1]));
+            if (sharedPrefs.contains("grades") && sharedPrefs.contains("gwa")) {
+                String[] saved = sharedPrefs.getString("grades", "").split(",");
+                double sU = getYearLevelObj(sharedPrefs.getInt("gradeLevel", gradeLevel)).units(),
+                        cU = getYearLevelObj(gradeLevel).units();
+                if (saved.length == subjectList.size() && sU == cU) {
+                    for (int i = 0; i < subjectList.size(); i++)
+                        subjectList.get(i).setGrade(Double.parseDouble(saved[i]));
                 }
             }
-        }
 
-        // Restore GWA
-        result.setText(sharedPrefs.getString("gwa", "1.000"));
-
-        // Return list
-        return list;
+            // Restore GWA
+            result.setText(sharedPrefs.getString("gwa", "1.000"));
+        } else
+            result.setText("1.000");
     }
 
     private void scrollToTop() {

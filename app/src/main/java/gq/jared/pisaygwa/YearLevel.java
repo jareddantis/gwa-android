@@ -13,6 +13,13 @@ public class YearLevel {
             return subjects;
         }
 
+        public double units() {
+            double units = 0.0;
+            for (int i = 0; i < this.subjects.size(); i++)
+                units += this.subjects.get(i).units();
+            return units;
+        }
+
     }
 
     public static class First extends Level {
@@ -34,6 +41,9 @@ public class YearLevel {
 
         public final List<Subject> subjects() {
             return subjects;
+        }
+        public final double units() {
+            return super.units();
         }
 
     }
@@ -59,6 +69,9 @@ public class YearLevel {
         public final List<Subject> subjects() {
             return subjects;
         }
+        public final double units() {
+            return super.units();
+        }
 
     }
 
@@ -82,6 +95,9 @@ public class YearLevel {
 
         public final List<Subject> subjects() {
             return subjects;
+        }
+        public final double units() {
+            return super.units();
         }
 
     }
@@ -108,6 +124,9 @@ public class YearLevel {
         public final List<Subject> subjects() {
             return subjects;
         }
+        public final double units() {
+            return super.units();
+        }
 
     }
 
@@ -128,6 +147,9 @@ public class YearLevel {
 
         public final List<Subject> subjects() {
             return subjects;
+        }
+        public final double units() {
+            return super.units();
         }
 
     }

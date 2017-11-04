@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Pisay GWA</string>
+    <string name="author_name">Jared Dantis</string>
+    <string name="author_batch">PSHS-MC Batch 2019</string>
     <string-array name="levels">
         <item>Grade 7</item>
         <item>Grade 8</item>
@@ -7,4 +9,20 @@
         <item>Grade 10</item>
         <item>SYP</item>
     </string-array>
+    <string name="action_clear">Clear grades</string>
+    <string name="action_about">About this app</string>
+    <string name="version">Tap to check for updates</string>
+    <string name="github">Fork on GitHub</string>
+    <string name="bug">Report a bug or send feedback</string>
+    <string name="license">View licenses</string>
+    <string name="license_sub">This app is under the GNU Public License, version 2.</string>
+    <string name="licenses">Licenses</string>
+    <string name="author">Author</string>
+    <string name="twitter">Follow on Twitter</string>
+    <string name="website">Visit website</string>
+
+    <!-- Update dialog -->
+    <string name="update_avail">Update available</string>
+    <string name="update_unavail">No updates available</string>
+    <string name="update_unavail_sub">You\'re on the latest version. Hooray!</string>
 </resources>

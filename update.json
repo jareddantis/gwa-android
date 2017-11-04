@@ -1,0 +1,9 @@
+{
+    "latestVersion": "Release 8",
+    "latestVersionCode": 9,
+    "url": "https://github.com/illustra/gwa-android/releases/latest",
+    "releaseNotes": [
+        "What's new:",
+        "• The app is now an actual Android Java application, not just a web app wrapper."
+    ]
+}
