@@ -1,9 +1,20 @@
 {
-    "latestVersion": "Release 8",
-    "latestVersionCode": 9,
-    "url": "https://github.com/illustra/gwa-android/releases/latest",
+    "latestVersion": "Release 9",
+    "latestVersionCode": 10,
+    "url": "https://github.com/illustra/gwa-android/releases/download/9/PisayGWA.apk",
     "releaseNotes": [
         "What's new:",
-        "• The app is now an actual Android Java application, not just a web app wrapper."
+        "• Heard your feedback! '+' now lowers a grade, while '-' increases a grade",
+        "• You can now share your grades by tapping 'Share grades' from the menu",
+        "• Night mode is now available, just choose 'Switch theme' from the menu",
+        "• Tweaked color schemes for Grade 8 and SYP",
+        "• Updates are now checked for automatically at launch (you can still check manually)",
+        "",
+        "Under-the-hood changes:",
+        "• Android devices running Jellybean (4.2 - 4.3) are now supported",
+        "• Fixed launch crash on Android versions before 5.1",
+        "• Removed weird margin around action bar on older Android versions",
+        "",
+        "Let me know what you think! Tap the menu icon (three dots), choose 'About this app,' then 'Report a bug or send feedback.'"
     ]
 }

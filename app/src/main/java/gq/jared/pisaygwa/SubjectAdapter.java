@@ -22,19 +22,20 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
     private List<Subject> subjectList;
     private Context ctx;
     private String gwa;
+    private boolean isDark = false;
 
-    public SubjectAdapter(Context ctx, List<Subject> subjectList) {
+    SubjectAdapter(Context ctx, List<Subject> subjectList) {
         this.ctx = ctx;
         this.subjectList = subjectList;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public CardView mask;
-        public TextView name, units, grade;
-        public ImageView icon, plus, minus;
+        CardView mask;
+        TextView name, units, grade;
+        ImageView icon, plus, minus;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             mask = v.findViewById(R.id.subjectIconMask);
             name = v.findViewById(R.id.subjectName);
@@ -43,7 +44,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
             icon = v.findViewById(R.id.subjectIcon);
             plus = v.findViewById(R.id.subjectGradePlus);
             minus = v.findViewById(R.id.subjectGradeMinus);
-            plus.setOnClickListener(new View.OnClickListener() {
+            minus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     double newGrade = subjectList.get(getAdapterPosition()).increaseGrade();
@@ -52,7 +53,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
                     saveGrades();
                 }
             });
-            minus.setOnClickListener(new View.OnClickListener() {
+            plus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     double newGrade = subjectList.get(getAdapterPosition()).decreaseGrade();
@@ -83,21 +84,25 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
         String name = subject.name(),
                units = Double.toString(subject.units()).concat(" units");
         int icon = subject.icon(),
+            white = ContextCompat.getColor(ctx, android.R.color.white),
+            black = ContextCompat.getColor(ctx, android.R.color.black),
             color = ContextCompat.getColor(ctx, subject.color());
         double grade = subject.getGrade();
 
         // Set color
         holder.mask.setCardBackgroundColor(color);
-        holder.plus.setColorFilter(color);
-        holder.minus.setColorFilter(color);
-        holder.grade.setTextColor(color);
+        holder.plus.setColorFilter(isDark ? white : color);
+        holder.minus.setColorFilter(isDark ? white : color);
+        holder.grade.setTextColor(isDark ? white : color);
+        holder.name.setTextColor(isDark ? white : black);
+        holder.units.setTextColor(isDark ? white : black);
 
         // Populate data
         String savedGrade = Subject.formatGrade(grade);
         holder.grade.setText(savedGrade);
         holder.name.setText(name);
         holder.units.setText(units);
-        holder.icon.setImageDrawable(ContextCompat.getDrawable(ctx, icon));
+        holder.icon.setImageResource(icon);
     }
 
     private void computeGwa() {
@@ -130,11 +135,33 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
         editor.apply();
     }
 
-    public void clearGrades() {
+    void clearGrades() {
         for (int i = 0; i < subjectList.size(); i++)
             subjectList.get(i).setGrade(1.0);
         computeGwa();
         saveGrades();
+        notifyDataSetChanged();
+    }
+
+    String dumpGrades() {
+        computeGwa();
+        saveGrades();
+        StringBuilder grades = new StringBuilder();
+
+        for (int i = 0; i < getItemCount(); i++) {
+            Subject subject = subjectList.get(i);
+            grades.append(subject.name());
+            grades.append(": ");
+            grades.append(subject.getGrade());
+            grades.append("\n");
+        }
+
+        grades.append("\n").append("GWA: ").append(gwa);
+        return grades.toString();
+    }
+
+    public void switchTheme(boolean isDark) {
+        this.isDark = isDark;
         notifyDataSetChanged();
     }
 

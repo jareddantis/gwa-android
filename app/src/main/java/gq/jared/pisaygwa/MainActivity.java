@@ -3,15 +3,19 @@ package gq.jared.pisaygwa;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,21 +38,31 @@ public class MainActivity extends AppCompatActivity {
     private TextView result;
     private int gradeLevel;
     private boolean firstRun = true;
+    private boolean isDark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // Action bar
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayShowTitleEnabled(false);
+        } else {
+            Log.e("pisaygwa", "Null support action bar");
+        }
 
         // Get the set level or use the default
         result = findViewById(R.id.result);
         sharedPrefs = this.getSharedPreferences("pisaygwa", Context.MODE_PRIVATE);
-        gradeLevel = sharedPrefs.getInt("gradeLevel", 1);
+        gradeLevel = sharedPrefs.getInt("gradeLevel", 4);
+
+        // Switch theme if necessary
+        isDark = sharedPrefs.getBoolean("isDark", false);
 
         // Setup view
         subjectList = new ArrayList<>();
@@ -56,13 +70,26 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView sView = findViewById(R.id.subjectsList);
         sView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         sView.setItemAnimator(new DefaultItemAnimator());
+        sView.setNestedScrollingEnabled(false);
         sView.setAdapter(subjectAdapter);
 
+        // Check for updates
+        Updater updater = new Updater(this);
+        updater.startUpdateCheck(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+
         // Setup dropdown
+        MenuItem item = menu.findItem(R.id.levelchooser);
+        Spinner spinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> adapter = LevelAdapter.createFromResource(this,
                 R.array.levels, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = findViewById(R.id.levelchooser);
+        spinner.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        spinner.setGravity(Gravity.END);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -79,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 scrollToTop();
 
                 // Save
+                loadTheme();
                 SharedPreferences.Editor editor = sharedPrefs.edit();
                 editor.putInt("gradeLevel", gradeLevel);
                 editor.apply();
@@ -92,11 +120,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         spinner.setSelection(gradeLevel);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -106,12 +130,33 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_clear:
                 subjectAdapter.clearGrades();
                 break;
+            case R.id.action_share:
+                createShareIntent();
+                break;
+            case R.id.action_theme:
+                isDark = !isDark;
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putBoolean("isDark", isDark);
+                editor.apply();
+                loadTheme();
+                break;
             case R.id.action_about:
                 Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-                MainActivity.this.startActivity(intent);
+                startActivityForResult(intent, 1);
                 break;
         }
         return false;
+    }
+
+    private void createShareIntent() {
+        String grades = subjectAdapter.dumpGrades();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Grades");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, grades);
+        startActivity(Intent.createChooser(sendIntent, getResources()
+                .getString(R.string.action_share)));
     }
 
     private YearLevel.Level getYearLevelObj(int gradeLevel) {
@@ -169,8 +214,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setColor(int color, int darker) {
-        CardView barBg = findViewById(R.id.barBg);
-        barBg.setCardBackgroundColor(color);
+        // Change action bar background
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setBackgroundDrawable(new ColorDrawable(color));
+        }
+
+        // Change system bars background
         Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -180,6 +230,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void restoreGrades() {
+        String defaultGwa = getResources().getString(R.string.default_gwa);
+
         if (firstRun) {
             // Restore grades
             if (sharedPrefs.contains("grades") && sharedPrefs.contains("gwa")) {
@@ -193,14 +245,24 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Restore GWA
-            result.setText(sharedPrefs.getString("gwa", "1.000"));
+            result.setText(sharedPrefs.getString("gwa", defaultGwa));
         } else
-            result.setText("1.000");
+            result.setText(defaultGwa);
     }
 
     private void scrollToTop() {
-        ScrollView sv = findViewById(R.id.scrollview);
+        ScrollView sv = findViewById(R.id.scrollView);
         sv.fullScroll(ScrollView.FOCUS_UP);
+    }
+
+    private void loadTheme() {
+        View rootView = getWindow().getDecorView(),
+             subjectLayout = findViewById(R.id.subjectsListLayout);
+        int color = isDark ? R.color.darkGradeSyp : android.R.color.white,
+            bgColor = ContextCompat.getColor(this, color);
+        rootView.setBackgroundColor(bgColor);
+        subjectLayout.setBackgroundColor(bgColor);
+        subjectAdapter.switchTheme(isDark);
     }
 
 }

@@ -1,19 +1,19 @@
 package gq.jared.pisaygwa;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
 import de.psdev.licensesdialog.LicensesDialog;
 
@@ -31,10 +31,20 @@ public class AboutActivity extends AppCompatActivity {
         // Action bar
         Toolbar myToolbar = findViewById(R.id.aboutToolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+        } else {
+            Log.e("pisaygwa", "Null support action bar");
+        }
+
+        // Switch theme if necessary
+        SharedPreferences sharedPrefs = this.getSharedPreferences("pisaygwa", Context.MODE_PRIVATE);
+        boolean isDark = sharedPrefs.getBoolean("isDark", false);
+        loadTheme(isDark);
 
         // Populate app version
-        String appVersion = "Release ";
+        String appVersion = BuildConfig.DEBUG ? "Debug release " : "Release ";
         try {
             appVersion += getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
@@ -56,7 +66,8 @@ public class AboutActivity extends AppCompatActivity {
         actionUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startUpdateCheck();
+                Updater updater = new Updater(AboutActivity.this);
+                updater.startUpdateCheck(false);
             }
         });
         actionGithub.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +110,12 @@ public class AboutActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     // From https://github.com/kabouzeid/Phonograph
     private void openUrl(String url) {
         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -124,19 +141,13 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-    private void startUpdateCheck() {
-        String url = "https://raw.githubusercontent.com/illustra/gwa-android/master/update.json";
-        Log.d("pisaygwa", "Started update check");
-        AppUpdater updater = new AppUpdater(this)
-                .setDisplay(Display.DIALOG)
-                .setUpdateFrom(UpdateFrom.JSON)
-                .showAppUpdated(true)
-                .setUpdateJSON(url)
-                .setButtonDoNotShowAgain(null)
-                .setTitleOnUpdateAvailable(R.string.update_avail)
-                .setTitleOnUpdateNotAvailable(R.string.update_unavail)
-                .setContentOnUpdateNotAvailable(R.string.update_unavail_sub);
-        updater.start();
+    private void loadTheme(boolean isDark) {
+        View rootView = getWindow().getDecorView(),
+                rootLayout = findViewById(R.id.rootLayout);
+        int color = isDark ? R.color.darkGradeSyp : android.R.color.white,
+                bgColor = ContextCompat.getColor(this, color);
+        rootView.setBackgroundColor(bgColor);
+        rootLayout.setBackgroundColor(bgColor);
     }
 
 }

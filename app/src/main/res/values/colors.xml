@@ -6,12 +6,11 @@
     <color name="colorGrade8">#f9a825</color>
     <color name="colorGrade9">#d32f2f</color>
     <color name="colorGrade10">#303f9f</color>
-    <color name="colorGradeSyp">#000000</color>
+    <color name="colorGradeSyp">#424242</color>
     <color name="darkGrade7">#28702f</color>
-    <color name="darkGrade8">#db9421</color>
+    <color name="darkGrade8">#f57f17</color>
     <color name="darkGrade9">#b5282b</color>
     <color name="darkGrade10">#263280</color>
-    <color name="darkGradeSyp">#000000</color>
-    <color name="white">#ffffff</color>
+    <color name="darkGradeSyp">#212121</color>
     <color name="icon">#757575</color>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pisay GWA</string>
+    <string name="app_name">Pisay GWA Debug</string>
     <string name="author_name">Jared Dantis</string>
     <string name="author_batch">PSHS-MC Batch 2019</string>
     <string-array name="levels">
