@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -23,7 +24,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -67,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         // Setup view
         subjectList = new ArrayList<>();
         subjectAdapter = new SubjectAdapter(this, subjectList);
+        LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
+        lm.setAutoMeasureEnabled(true);
         RecyclerView sView = findViewById(R.id.subjectsList);
-        sView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        sView.setLayoutManager(lm);
         sView.setItemAnimator(new DefaultItemAnimator());
         sView.setNestedScrollingEnabled(false);
         sView.setAdapter(subjectAdapter);
@@ -251,8 +253,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void scrollToTop() {
-        ScrollView sv = findViewById(R.id.scrollView);
-        sv.fullScroll(ScrollView.FOCUS_UP);
+        NestedScrollView sv = findViewById(R.id.scrollView);
+        sv.fullScroll(NestedScrollView.FOCUS_UP);
     }
 
     private void loadTheme() {
