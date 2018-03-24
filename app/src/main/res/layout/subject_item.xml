@@ -39,8 +39,11 @@
         <ImageView
             android:id="@+id/subjectGradeMinus"
             android:layout_centerVertical="true"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             app:srcCompat="@drawable/minus" />
 
         <TextView
@@ -58,8 +61,11 @@
             android:id="@+id/subjectGradePlus"
             android:layout_toEndOf="@id/subjectGradeValue"
             android:layout_centerVertical="true"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             app:srcCompat="@drawable/plus" />
 
     </RelativeLayout>
