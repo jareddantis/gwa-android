@@ -1,11 +1,14 @@
 package gq.jared.pisaygwa;
 
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.graphics.drawable.ArgbEvaluator;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
@@ -67,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
         // Setup view
         subjectList = new ArrayList<>();
         subjectAdapter = new SubjectAdapter(this, subjectList);
-        LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
-        lm.setAutoMeasureEnabled(true);
+        LinearLayoutManager lm = new GwaLinearLayoutManager(getApplicationContext());
         RecyclerView sView = findViewById(R.id.subjectsList);
         sView.setLayoutManager(lm);
         sView.setItemAnimator(new DefaultItemAnimator());
@@ -258,12 +260,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadTheme() {
-        View rootView = getWindow().getDecorView(),
+        final View rootView = getWindow().getDecorView(),
              subjectLayout = findViewById(R.id.subjectsListLayout);
-        int color = isDark ? R.color.darkGradeSyp : android.R.color.white,
-            bgColor = ContextCompat.getColor(this, color);
-        rootView.setBackgroundColor(bgColor);
-        subjectLayout.setBackgroundColor(bgColor);
+        int gray = ContextCompat.getColor(this, R.color.darkGradeSyp),
+            white = ContextCompat.getColor(this, android.R.color.white);
+        int from = isDark ? white : gray,
+            to = isDark ? gray : white;
+
+        @SuppressLint("RestrictedApi")
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), from, to);
+        colorAnimation.setDuration(400);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                int bgColor = (int) animator.getAnimatedValue();
+                rootView.setBackgroundColor(bgColor);
+                subjectLayout.setBackgroundColor(bgColor);
+            }
+
+        });
+        colorAnimation.start();
         subjectAdapter.switchTheme(isDark);
     }
 
