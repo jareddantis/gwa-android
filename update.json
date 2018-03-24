@@ -1,13 +1,16 @@
 {
-    "latestVersion": "Release 10",
-    "latestVersionCode": 11,
-    "url": "https://github.com/illustra/gwa-android/releases/download/10/PisayGWA.apk",
+    "latestVersion": "Release 11",
+    "latestVersionCode": 12,
+    "url": "https://github.com/illustra/gwa-android/releases/download/11/PisayGWA.apk",
     "releaseNotes": [
         "What's new:",
-        "• Fixed bug where subjects at the end of the list would not show on other devices. Sorry about that!",
+        "• Plus/minus icons are now a bit larger",
+        "• Support for multi-window on Android 7.0+ and Samsung devices",
+        "• Switching to night mode and back now has a transition",
         "",
         "Under-the-hood changes:",
-        "• Target Android 8.1",
+        "• Reduced app size",
+        "• Updated libraries",
         "",
         "Let me know what you think! Tap the menu icon (three dots), choose 'About this app,' then 'Report a bug or send feedback.'"
     ]
