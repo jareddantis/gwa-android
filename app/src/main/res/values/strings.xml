@@ -1,13 +1,14 @@
 <resources>
-    <string name="app_name">Pisay GWA</string>
+    <string name="app_name">GWA Calc</string>
     <string name="author_name">Jared Dantis</string>
     <string name="author_batch">PSHS-MC Batch 2019</string>
     <string-array name="levels">
-        <item>Grade 7</item>
-        <item>Grade 8</item>
-        <item>Grade 9</item>
-        <item>Grade 10</item>
-        <item>SYP</item>
+        <item>PSHS Grade 7</item>
+        <item>PSHS Grade 8</item>
+        <item>PSHS Grade 9</item>
+        <item>PSHS Grade 10</item>
+        <item>PSHS SYP (11 &amp; 12)</item>
+        <item>Custom subjects</item>
     </string-array>
 
     <!-- Default values -->
@@ -36,6 +37,7 @@
     <string name="update_avail">Update available</string>
     <string name="update_unavail">No updates available</string>
     <string name="update_unavail_sub">You\'re on the latest version. Nice!</string>
+    <string name="update_defer">Don\'t show again</string>
 
     <!-- Errors -->
     <string name="err_no_connection">Oops! Internet connection problem.</string>

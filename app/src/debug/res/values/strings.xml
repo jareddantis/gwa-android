@@ -1,42 +1,37 @@
 <resources>
-    <string name="app_name">Pisay GWA Debug</string>
+    <!-- App metadata -->
+    <string name="app_name">GWA Calc (debug)</string>
     <string name="author_name">Jared Dantis</string>
     <string name="author_batch">PSHS-MC Batch 2019</string>
+
+    <!-- Grade level selection -->
     <string-array name="levels">
-        <item>Grade 7</item>
-        <item>Grade 8</item>
-        <item>Grade 9</item>
-        <item>Grade 10</item>
-        <item>SYP</item>
+        <item>PSHS Grade 7</item>
+        <item>PSHS Grade 8</item>
+        <item>PSHS Grade 9</item>
+        <item>PSHS Grade 10</item>
+        <item>PSHS SYP (11 &amp; 12)</item>
+        <item>Custom subjects</item>
     </string-array>
 
-    <!-- Default values -->
-    <string name="default_gwa">1.000</string>
-    <string name="default_grade">1.00</string>
+    <!-- Grade prompt -->
+    <string name="grade_prompt">Enter grade for %1$s</string>
+    <string name="grade_invalid">Invalid grade value: %1$s</string>
+    <string name="grade_prompt_hint">e.g. 1, 1.5, 2.50&#8230;</string>
 
-    <!-- Actions -->
+    <!-- Sidebar & action bar -->
     <string name="action_clear">Clear grades</string>
     <string name="action_share">Share grades</string>
-    <string name="action_theme">Switch theme</string>
+    <string name="action_theme">Night mode</string>
+    <string name="action_report">Send feedback</string>
     <string name="action_about">About this app</string>
-
-    <!-- About page -->
-    <string name="version">Tap to check for updates</string>
-    <string name="github">Fork on GitHub</string>
-    <string name="bug">Report a bug or send feedback</string>
-    <string name="license">View licenses</string>
-    <string name="license_sub">This app is under the GNU Public License, version 2.</string>
-    <string name="licenses">Licenses</string>
-    <string name="author">Author</string>
-    <string name="twitter">Follow on Twitter</string>
-    <string name="website">Visit website</string>
+    <string name="action_update">Check for update</string>
 
     <!-- Update dialog -->
     <string name="update_check_started">Checking for updates. Hang tight!</string>
     <string name="update_avail">Update available</string>
     <string name="update_unavail">No updates available</string>
     <string name="update_unavail_sub">You\'re on the latest version. Nice!</string>
-
-    <!-- Errors -->
-    <string name="err_no_connection">Oops! Internet connection problem.</string>
+    <string name="update_defer">Don\'t show again</string>
+    <string name="update_disconnected">Oops! Internet connection problem.</string>
 </resources>

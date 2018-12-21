@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:resizeableActivity="true"
-        tools:ignore="UnusedAttribute">
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
+        android:fullBackupContent="@xml/backup_descriptor">
 
         <!-- Samsung Multi-window support -->
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
@@ -35,24 +36,25 @@
             android:value="true" />
 
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/MainTheme"
-            android:configChanges="orientation|screenSize">
+            android:name=".activity.Splash"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".activity.Main"
+            android:theme="@style/MainTheme"
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
                 <!-- Samsung Multi-window support -->
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
                 <category android:name="android.intent.category.PENWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AboutActivity"
-            android:theme="@style/AboutTheme"
-            android:configChanges="orientation|screenSize|screenLayout"
-            android:label="@string/action_about"
-            android:parentActivityName="gq.jared.pisaygwa.MainActivity" />
+
     </application>
 
 </manifest>

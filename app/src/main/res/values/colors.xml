@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorDefault">#1a237e</color>
-    <color name="colorDefaultDark">#303f9f</color>
-    <color name="colorGrade7">#338e3c</color>
-    <color name="colorGrade8">#f9a825</color>
-    <color name="colorGrade9">#d32f2f</color>
-    <color name="colorGrade10">#303f9f</color>
-    <color name="colorGradeSyp">#424242</color>
-    <color name="darkGrade7">#28702f</color>
-    <color name="darkGrade8">#f57f17</color>
-    <color name="darkGrade9">#b5282b</color>
-    <color name="darkGrade10">#263280</color>
-    <color name="darkGradeSyp">#212121</color>
-    <color name="icon">#757575</color>
+    <color name="colorLtGry">#EEEEEE</color>
+    <color name="colorDkGry">#444444</color>
+    <color name="spinnerBg">#E0E0E0</color>
+    <color name="lightGrade7">#33691E</color>
+    <color name="lightGrade8">#EF6C00</color>
+    <color name="lightGrade9">#C62828</color>
+    <color name="lightGrade10">#1976D2</color>
+    <color name="lightSyp">#455A64</color>
+    <color name="darkGrade7">#33691E</color>
+    <color name="darkGrade8">#E65100</color>
+    <color name="darkGrade9">#B71C1C</color>
+    <color name="darkGrade10">#1565C0</color>
+    <color name="darkSyp">#37474F</color>
+    <color name="icon">#9e9e9e</color>
 </resources>
