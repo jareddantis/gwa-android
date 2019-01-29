@@ -5,7 +5,7 @@ import java.text.DecimalFormat
 
 class SubjectPresenter: Contract.Presenter {
 
-    var subjects = ArrayList<Subject>()
+    var subjects = ArrayList<SubjectImplPH>()
 
     override fun onDestroy() {
         subjects.clear()

@@ -1,6 +1,6 @@
 package gq.jared.pisaygwa.subj
 
-class Subject(val name: String, val units: Double): Contract.Model {
+class SubjectImplPH(val name: String, val units: Double): Contract.Model {
 
     var grade: Double = 1.00
     val description: String = "$name ($units)"
@@ -22,7 +22,7 @@ class Subject(val name: String, val units: Double): Contract.Model {
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is Subject && this.name == other.name && this.units == other.units
+        return other is SubjectImplPH && this.name == other.name && this.units == other.units
     }
 
     override fun hashCode(): Int {

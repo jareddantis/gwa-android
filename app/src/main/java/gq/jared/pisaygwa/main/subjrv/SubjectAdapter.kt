@@ -25,7 +25,7 @@ class SubjectAdapter(private val presenter: SubjectPresenter):
         presenter.onDestroy()
     }
 
-    fun updateSubjects(newSubjects: ArrayList<Subject>) {
+    fun updateSubjects(newSubjects: ArrayList<SubjectImplPH>) {
         if (itemCount == 0) {
             presenter.subjects = newSubjects
             notifyDataSetChanged()

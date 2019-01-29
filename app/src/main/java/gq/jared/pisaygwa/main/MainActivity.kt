@@ -11,13 +11,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import gq.jared.pisaygwa.R
-import gq.jared.pisaygwa.subj.Subjects
 import gq.jared.pisaygwa.subj.SubjectAdapter
+import gq.jared.pisaygwa.subj.SubjectLLMgr
 import gq.jared.pisaygwa.subj.SubjectPresenter
+import gq.jared.pisaygwa.subj.SubjectsPH
 
 class Main: AppCompatActivity() {
 
@@ -50,13 +50,13 @@ class Main: AppCompatActivity() {
         mSpinner.adapter = mSpinnerAdapter
 
         // Setup view
-        val lm = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
+        val lm = SubjectLLMgr(applicationContext, RecyclerView.VERTICAL, false)
         val sView = findViewById<RecyclerView>(R.id.subj_list)
         sView.layoutManager = lm
         sView.itemAnimator = DefaultItemAnimator()
         sView.isNestedScrollingEnabled = false
         sView.adapter = subjectAdapter
-        subjectAdapter.updateSubjects(Subjects.Syp().subjects)
+        subjectAdapter.updateSubjects(SubjectsPH.Syp().subjects)
     }
 
     override fun onDestroy() {
