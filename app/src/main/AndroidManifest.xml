@@ -36,7 +36,7 @@
             android:value="true" />
 
         <activity
-            android:name=".activity.Splash"
+            android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-            android:name=".activity.Main"
+            android:name=".main.MainActivity"
             android:theme="@style/MainTheme"
             android:configChanges="orientation|screenSize">
             <intent-filter>
