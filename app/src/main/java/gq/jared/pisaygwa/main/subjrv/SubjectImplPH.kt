@@ -1,4 +1,4 @@
-package gq.jared.pisaygwa.subj
+package gq.jared.pisaygwa.main.subjrv
 
 class SubjectImplPH(val name: String, val units: Double): Contract.Model {
 

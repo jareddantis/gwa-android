@@ -1,29 +1,19 @@
-package gq.jared.pisaygwa.activity
+package gq.jared.pisaygwa.main
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.navigation.NavigationView
 import gq.jared.pisaygwa.R
-import gq.jared.pisaygwa.subj.SubjectAdapter
-import gq.jared.pisaygwa.subj.SubjectLLMgr
-import gq.jared.pisaygwa.subj.SubjectPresenter
-import gq.jared.pisaygwa.subj.SubjectsPH
 
-class Main: AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
-    private lateinit var mSpinner: AppCompatSpinner
-    private var subjectAdapter = SubjectAdapter(SubjectPresenter())
+    private val mainPresenter = MainPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainTheme)
@@ -41,27 +31,14 @@ class Main: AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.menu)
         }
 
-        // Spinner
-        val mNavView = findViewById<NavigationView>(R.id.sidebar)
-        val mNavHead = mNavView.getHeaderView(0)
-        mSpinner = mNavHead.findViewById(R.id.gradelevel_chooser)
-        val mSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.levels, android.R.layout.simple_spinner_dropdown_item)
-        mSpinner.adapter = mSpinnerAdapter
-
-        // Setup view
-        val lm = SubjectLLMgr(applicationContext, RecyclerView.VERTICAL, false)
-        val sView = findViewById<RecyclerView>(R.id.subj_list)
-        sView.layoutManager = lm
-        sView.itemAnimator = DefaultItemAnimator()
-        sView.isNestedScrollingEnabled = false
-        sView.adapter = subjectAdapter
-        subjectAdapter.updateSubjects(SubjectsPH.Syp().subjects)
+        // Setup views
+        mainPresenter.setupSubjectSpinner()
+        mainPresenter.setupSubjectRecyclerView()
     }
 
     override fun onDestroy() {
+        mainPresenter.onDestroy()
         super.onDestroy()
-        subjectAdapter.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

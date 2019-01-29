@@ -1,4 +1,4 @@
-package gq.jared.pisaygwa.subj
+package gq.jared.pisaygwa.main.subjrv
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import gq.jared.pisaygwa.R
-import gq.jared.pisaygwa.activity.Main
+import gq.jared.pisaygwa.main.MainActivity
 
 class SubjectViewHolder(presenter: SubjectPresenter, rowView: View):
         RecyclerView.ViewHolder(rowView), Contract.View {
@@ -34,7 +34,7 @@ class SubjectViewHolder(presenter: SubjectPresenter, rowView: View):
             builder.setTitle(String.format(ctx.resources.getString(R.string.grade_prompt), name))
 
             // Set dialog view
-            val activity = ctx as Main
+            val activity = ctx as MainActivity
             val dialogView = LayoutInflater.from(ctx)
                     .inflate(R.layout.grade_prompt, activity.findViewById(R.id.content), false)
             val inputView = dialogView.findViewById<EditText>(R.id.input)
@@ -72,7 +72,7 @@ class SubjectViewHolder(presenter: SubjectPresenter, rowView: View):
     }
 
     override fun setAverage(average: String) {
-        val activity = ctx as Main
+        val activity = ctx as MainActivity
         val avgView = activity.findViewById<TextView>(R.id.result)
         avgView.text = average
     }

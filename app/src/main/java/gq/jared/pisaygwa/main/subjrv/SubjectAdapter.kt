@@ -1,4 +1,4 @@
-package gq.jared.pisaygwa.subj
+package gq.jared.pisaygwa.main.subjrv
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
